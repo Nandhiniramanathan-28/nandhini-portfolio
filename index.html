@@ -1,88 +1,141 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nandhini R — Portfolio</title>
-  <style>
-    /* Root theme variables */
-    :root{--bg:#0b1220;--card:#0f1724;--text:#e6eef8;--muted:#9aa3b2;--accent:#5b6cff;--accent-2:#8fb1ff;--glass:rgba(255,255,255,0.03)}
-    [data-theme="light"]{--bg:#f7fbff;--card:#ffffff;--text:#0b1220;--muted:#4b5563;--accent:#3b82f6;--accent-2:#60a5fa;--glass:rgba(11,17,32,0.03)}
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;margin:0;background:radial-gradient(1200px 400px at 10% 10%, rgba(91,108,255,0.06), transparent), linear-gradient(180deg,var(--bg) 0%, #071833 100%);color:var(--text);padding:28px;transition:background 300ms ease,color 300ms ease}
+export default function Portfolio() {
+  const [page, setPage] = useState('home');
+  const [theme, setTheme] = useState('dark');
 
-    .container{max-width:1100px;margin:0 auto}
-    header{display:flex;align-items:center;justify-content:space-between;gap:18px}
-    .left{display:flex;align-items:center;gap:16px}
-    .avatar{width:88px;height:88px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:rgba(2,6,23,0.9);font-size:28px;box-shadow:0 8px 20px rgba(11,17,32,0.35)}
-    h1{margin:0;font-size:26px}
-    p.lead{margin:6px 0 0;color:var(--muted);max-width:760px}
+  useEffect(() => {
+    const saved = localStorage.getItem('theme') || 'dark';
+    setTheme(saved);
+    if (saved === 'light') document.documentElement.setAttribute('data-theme','light');
+    else document.documentElement.removeAttribute('data-theme');
+  }, []);
 
-    nav{display:flex;gap:10px;align-items:center}
-    .nav-btn{background:transparent;border:0;padding:8px 12px;border-radius:10px;color:var(--text);cursor:pointer;font-weight:600;opacity:0.9}
-    .nav-btn:hover{background:var(--glass);transform:translateY(-2px)}
-    .active{box-shadow:0 6px 18px rgba(91,108,255,0.12);background:linear-gradient(90deg, rgba(91,108,255,0.06), rgba(143,177,255,0.04));}
+  function toggleTheme() {
+    const next = theme === 'light' ? 'dark' : 'light';
+    setTheme(next);
+    if (next === 'light') document.documentElement.setAttribute('data-theme','light');
+    else document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('theme', next);
+  }
 
-    .grid{display:grid;grid-template-columns:1fr 340px;gap:22px;margin-top:20px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter: blur(6px);border-radius:12px;padding:18px;transition:transform 300ms ease, box-shadow 300ms ease}
-    .card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(2,6,23,0.45)}
-    .section-title{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+  const pages = {
+    home: (
+      <div>
+        <h2 className="text-2xl font-semibold mb-2">About</h2>
+        <p className="text-neutral-400 mb-4">Motivated AI & ML student building full-stack apps and ML tools. Experienced with Python, C++, SQL, TensorFlow and practical internship experience in QA.</p>
+        <h3 className="font-semibold mt-4">Highlights</h3>
+        <ul className="list-disc ml-5 text-neutral-400">
+          <li>Resume-screening ML pipeline using NLP.</li>
+          <li>Ticket booking & Hospital Management full-stack projects.</li>
+          <li>Internship at TridentSQA — Software testing & QA.</li>
+        </ul>
+      </div>
+    ),
+    projects: (
+      <div>
+        <h2 className="text-2xl font-semibold mb-4">Projects</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          <article className="p-4 bg-white/3 rounded-lg">
+            <h4 className="font-semibold">AI-powered Ticket Booking</h4>
+            <p className="text-sm text-neutral-400">Python • HTML • Greedy seat allocation • Web UI</p>
+            <p className="mt-2 text-neutral-300">Greedy algorithm to allocate best seats and a simple booking flow. Includes seat map and booking history.</p>
+          </article>
 
-    .skills{display:flex;flex-wrap:wrap;gap:8px}
-    .skill{background:linear-gradient(90deg, rgba(91,108,255,0.08), rgba(143,177,255,0.04));padding:8px 10px;border-radius:999px;font-size:13px;color:var(--accent);border:1px solid rgba(91,108,255,0.06)}
+          <article className="p-4 bg-white/3 rounded-lg">
+            <h4 className="font-semibold">Hospital Management System</h4>
+            <p className="text-sm text-neutral-400">HTML • SQL • Backend</p>
+            <p className="mt-2 text-neutral-300">Patient records, appointments, and billing; role-based access and basic analytics dashboards.</p>
+          </article>
 
-    .project{margin-bottom:14px}
-    .project h4{margin:0 0 6px}
-    .meta{font-size:13px;color:var(--muted)}
+          <article className="p-4 bg-white/3 rounded-lg">
+            <h4 className="font-semibold">Resume Screening (NLP)</h4>
+            <p className="text-sm text-neutral-400">Python • NLP • Supervised Learning</p>
+            <p className="mt-2 text-neutral-300">NLP preprocessing, feature extraction, and supervised model to rank & filter resumes.</p>
+          </article>
 
-    .contact-list{display:flex;flex-direction:column;gap:8px}
-    a.btn{display:inline-block;padding:10px 14px;border-radius:10px;background:var(--accent);color:white;text-decoration:none;font-weight:700}
-
-    footer{margin-top:28px;color:var(--muted);font-size:13px;text-align:center}
-
-    /* Animations */
-    .fade-in{animation:fadeIn 600ms ease both}
-    .stagger > *{opacity:0;transform:translateY(6px);animation:staggerIn 420ms ease forwards}
-    .stagger > *:nth-child(1){animation-delay:80ms}.stagger > *:nth-child(2){animation-delay:160ms}.stagger > *:nth-child(3){animation-delay:240ms}.stagger > *:nth-child(4){animation-delay:320ms}
-
-    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-    @keyframes staggerIn{to{opacity:1;transform:none}}
-
-    @media (max-width:980px){.grid{grid-template-columns:1fr}.avatar{width:64px;height:64px;font-size:20px}.container{padding:18px}}
-
-    .theme-toggle{display:flex;align-items:center;gap:8px;padding:8px;border-radius:999px;background:var(--glass);border:1px solid rgba(255,255,255,0.02);cursor:pointer}
-    .pill{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.02);font-weight:600}
-
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <div class="left">
-        <div class="avatar">NR</div>
-        <div>
-          <h1 class="fade-in">Nandhini R</h1>
-          <p class="lead fade-in">B.E. Student — Artificial Intelligence & Machine Learning · Python • C++ • SQL • ML • Deep Learning</p>
-          <p style="margin:6px 0 0;color:var(--muted);font-size:13px">Chennai, India · nandhiniramanathan04@gmail.com</p>
+          <article className="p-4 bg-white/3 rounded-lg">
+            <h4 className="font-semibold">This Portfolio (React + Tailwind)</h4>
+            <p className="text-sm text-neutral-400">React • Tailwind • Framer Motion</p>
+            <p className="mt-2 text-neutral-300">Responsive, themeable React component with smooth animations and easy deployment to Vercel or Netlify.</p>
+          </article>
         </div>
       </div>
-
-      <div style="display:flex;align-items:center;gap:12px">
-        <nav aria-label="Main navigation" class="fade-in">
-          <button class="nav-btn active" data-target="home">Home</button>
-          <button class="nav-btn" data-target="projects">Projects</button>
-          <button class="nav-btn" data-target="resume">Resume</button>
-          <button class="nav-btn" data-target="contact">Contact</button>
-        </nav>
-
-        <div class="theme-toggle" id="themeToggle" title="Toggle theme" role="button">
-          <span class="pill" id="themeLabel">Dark</span>
-        </div>
+    ),
+    resume: (
+      <div>
+        <h2 className="text-2xl font-semibold mb-2">Resume</h2>
+        <p className="text-neutral-400 mb-4">Download a polished PDF resume (one page) optimized for internships.</p>
+        <a href="/Nandhini_Resume_Generated.pdf" className="inline-block bg-indigo-600 text-white px-4 py-2 rounded-lg">Download PDF</a>
       </div>
-    </header>
-  </div>
+    ),
+    contact: (
+      <div>
+        <h2 className="text-2xl font-semibold mb-2">Contact</h2>
+        <p className="text-neutral-400">Email: nandhiniramanathan04@gmail.com<br/>Phone: +91 9363130831<br/>Location: Chennai, India</p>
+      </div>
+    )
+  };
 
-</body>
-</html>
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-slate-100 p-6">
+      <div className="max-w-5xl mx-auto">
+        <header className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-indigo-500 to-sky-400 flex items-center justify-center text-slate-900 font-bold text-2xl">NR</div>
+            <div>
+              <h1 className="text-2xl font-bold">Nandhini R</h1>
+              <p className="text-sm text-neutral-400">B.E. — AI & ML | Python • C++ • ML • SQL</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <nav className="hidden md:flex gap-2">
+              {['home','projects','resume','contact'].map(p=> (
+                <button key={p} onClick={()=>setPage(p)} className={`px-3 py-2 rounded-lg font-semibold ${page===p? 'bg-white/8' : 'hover:bg-white/3'}`}>
+                  {p[0].toUpperCase()+p.slice(1)}
+                </button>
+              ))}
+            </nav>
+
+            <button onClick={toggleTheme} className="px-3 py-2 rounded-full bg-white/6">{theme==='light' ? 'Light' : 'Dark'}</button>
+          </div>
+        </header>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          <main className="md:col-span-2">
+            <AnimatePresence exitBeforeEnter>
+              <motion.div key={page} initial={{opacity:0, y:8}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-6}} transition={{duration:0.3}}>
+                {pages[page]}
+              </motion.div>
+            </AnimatePresence>
+          </main>
+
+          <aside className="p-4 rounded-lg bg-white/4">
+            <div className="mb-4">
+              <h3 className="font-semibold">Contact & Links</h3>
+              <p className="text-sm text-neutral-400">nandhiniramanathan04@gmail.com • +91 9363130831</p>
+            </div>
+
+            <div className="mb-4">
+              <h4 className="font-semibold">Skills</h4>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {['Python','C++','Java','SQL','TensorFlow','PyTorch','NumPy','Pandas'].map(s=> (
+                  <span key={s} className="px-3 py-1 rounded-full bg-white/5 text-sm">{s}</span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-semibold">Internship</h4>
+              <p className="text-sm text-neutral-400">TridentSQA — Software testing & QA (Jun–Jul 2025)</p>
+            </div>
+          </aside>
+        </div>
+
+        <footer className="text-center text-sm text-neutral-500 mt-8">Built with ❤️ — Ready to deploy</footer>
+      </div>
+    </div>
+  );
+}
